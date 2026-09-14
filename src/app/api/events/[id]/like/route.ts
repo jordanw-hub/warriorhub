@@ -9,9 +9,10 @@ import authOptions from '@/lib/authOptions';
  */
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
@@ -24,7 +25,7 @@ export async function POST(
     // Get user from database
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
-      include: { interestedEvents: { where: { id: params.id } } },
+      include: { interestedEvents: { where: { id } } },
     });
 
     if (!user) {
@@ -44,7 +45,7 @@ export async function POST(
 
     // Check if event exists
     const event = await prisma.event.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!event) {
@@ -63,7 +64,7 @@ export async function POST(
         where: { id: user.id },
         data: {
           interestedEvents: {
-            disconnect: { id: params.id },
+            disconnect: { id },
           },
         },
       });
@@ -80,7 +81,7 @@ export async function POST(
       where: { id: user.id },
       data: {
         interestedEvents: {
-          connect: { id: params.id },
+          connect: { id },
         },
       },
     });
@@ -105,9 +106,10 @@ export async function POST(
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
@@ -118,7 +120,7 @@ export async function GET(
       where: { email: session.user.email },
       include: {
         interestedEvents: {
-          where: { id: params.id },
+          where: { id },
           select: { id: true },
         },
       },
