@@ -50,7 +50,7 @@ test('Calendar Page', async ({ page }) => {
   await expect(page.getByRole('heading')).toMatchAriaSnapshot('- heading "Calendar" [level=1]');
   await page.getByRole('button', { name: 'Back' }).click();
   await page.getByRole('button', { name: 'Today' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByRole('button', { name: 'Next', exact: true }).click();
   await page.getByRole('button', { name: 'Month' }).click();
   await page.getByRole('button', { name: 'Week' }).click();
   await page.getByRole('button', { name: 'Day', exact: true }).click();
