@@ -20,10 +20,10 @@ const getAuthContext = async (req: NextRequest) => {
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const event = await prisma.event.findUnique({
       where: { id },
       include: {
@@ -51,16 +51,17 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const auth = await getAuthContext(req);
     if (!auth.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const existing = await prisma.event.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existing) {
@@ -89,7 +90,7 @@ export async function PUT(
     }
 
     const updated = await prisma.event.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name,
         description: description || null,
@@ -116,16 +117,17 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const auth = await getAuthContext(req);
     if (!auth.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const existing = await prisma.event.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existing) {
@@ -136,7 +138,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    await prisma.event.delete({ where: { id: params.id } });
+    await prisma.event.delete({ where: { id } });
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error('Error deleting event:', error);

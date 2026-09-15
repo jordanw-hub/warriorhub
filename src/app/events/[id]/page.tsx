@@ -8,12 +8,13 @@ import LikeButton from '@/components/LikeButton';
 import { formatHstDate, formatHstTime } from '@/lib/time';
 
 interface EventDetailsPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function EventDetailsPage({ params }: EventDetailsPageProps) {
+  const { id } = await params;
   const event = await prisma.event.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       createdBy: {
         select: {
@@ -42,7 +43,7 @@ export default async function EventDetailsPage({ params }: EventDetailsPageProps
       where: { email: userEmail },
       include: {
         interestedEvents: {
-          where: { id: params.id },
+          where: { id },
           select: { id: true },
         },
       },
@@ -137,7 +138,7 @@ export default async function EventDetailsPage({ params }: EventDetailsPageProps
             {userRole === 'USER' && (
               <div className="mb-3">
                 <LikeButton
-                  eventId={params.id}
+                  eventId={id}
                   initialInterested={isInterested}
                 />
               </div>

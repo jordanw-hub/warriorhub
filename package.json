@@ -7,7 +7,7 @@
     "dev-https": "next dev --experimental-https",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "postinstall": "prisma generate",
     "playwright-development": "npx playwright test"
   },
@@ -22,7 +22,7 @@
     "bootstrap": "^5.3.8",
     "date-fns": "^4.1.0",
     "multiselect-react-dropdown": "^2.0.25",
-    "next": "^14.2.35",
+    "next": "^16.3.4",
     "next-auth": "^4.24.13",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
@@ -33,6 +33,7 @@
     "react-hook-form": "^7.68.0",
     "sweetalert": "^2.1.2",
     "ts-node": "10.9.2",
+    "vercel": "^59.17.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {
